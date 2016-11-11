@@ -1,0 +1,10 @@
+Commandes github :
+
+Copier répertoire git dans un répertoire sur son ordinateur : 
+git clone https://liendugit nomDuRépertoire
+
+Voir quels fichiers sont compris dans le git :
+git ls-files
+
+Voir le statut des fichiers git :
+git status
