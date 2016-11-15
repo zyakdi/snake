@@ -2,7 +2,7 @@
  * REMISE A NIVEAU INFO ISTY
  * Code ecrit par : Fabien Calcado
  * Email : fabien.calcado@isty.uvsq.fr
- * */
+ */
 
 #include "gestion_clavier.h"
 #include <stdio.h>
@@ -94,7 +94,7 @@ char pressing_key()
 	char key = NO_KEY;
 	
 	init_keyboard();
-	sleep(DELAY_KEY_DETECTION);
+	usleep(DELAY_KEY_DETECTION);
 	
 	if( keyboard_hit() != NO_KEY )
 	{

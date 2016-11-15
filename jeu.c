@@ -9,20 +9,17 @@
 
 void jouerPartie()
 {
-	char carte[HEIGHT][WIDTH] = {0}, key = 0;
+	char carte[HEIGHT][WIDTH], key = 0;
 	position posSerpent[HEIGHT*WIDTH + 1]; // Taille maximum du serpent en comptant la position "invisible" après sa queue
-	int tailleSerpent = 3, direction = HAUT, collision = 0;
+	int tailleSerpent = 1, direction = HAUT, collision = 0, score  = 0;
 	
 	// Initialisations
 	
 	posSerpent[0].x = WIDTH/2;
 	posSerpent[0].y = HEIGHT/2;
-	posSerpent[1].x = WIDTH/2; // Pour commencer on va initialiser un serpent de taille 3
-	posSerpent[1].y = HEIGHT/2 + 1;
-	posSerpent[2].x = WIDTH/2;
-	posSerpent[2].y = HEIGHT/2 + 2;
 	
 	initialiserCarte(carte, posSerpent, tailleSerpent);
+	genererFruit(carte);
 	genererFruit(carte);
 	
 	// Deroulement du jeu
@@ -30,7 +27,7 @@ void jouerPartie()
 	do
 	{
 		printf("\n\n\n\n\n\n");
-		afficherCarte(carte);
+		afficherCarte(carte, score);
 		
 		key = pressing_key();
 		if(key != NO_KEY)
@@ -41,13 +38,14 @@ void jouerPartie()
 		collision = verifierCollision(carte, posSerpent[0], posSerpent[tailleSerpent-1], direction);
 		if(collision == 1)
 		{
-			printf("\n\nPerdu ! Tu ne vaux pas mieux qu'un noir juif au petit penis adopté par un couple homosexuel\n");
+			printf("\n\nPerdu ! T'es mauvais\n");
 		}
 		else
 		{
 			if(collision == -1) // Si il mange un fruit
 			{
 				tailleSerpent++;
+				score++;
 				genererFruit(carte);
 			}
 			modifierPosition(posSerpent, tailleSerpent, direction);
@@ -59,7 +57,7 @@ void jouerPartie()
 	return;
 }
 
-// Crée une carte vierge avec le serpent au centre
+// Crée une carte vierge avec le serpent au centre, tailleSerpent en paramètres au cas où j'ai besoin d'un serpent de taille > 1 au début
 void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent)
 {
 	int i = 0, j = 0;
@@ -72,17 +70,17 @@ void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerp
 		}
 	}
 	
-	for(i = 0; i < tailleSerpent; i++)
-	{
-		carte[posSerpent[i].y][posSerpent[i].x] = CORPS;
-	}
+	carte[posSerpent[0].y][posSerpent[0].x] = TETE;
 	
 	return;
 }
 
-void afficherCarte(char carte[][WIDTH])
+void afficherCarte(char carte[][WIDTH], int score)
 {
 	int i = 0, j = 0;
+	
+	// Score
+	printf("Score : %d\n\n", score);
 	
 	// Paroi supérieure
 	for(j = 0; j < WIDTH+2; j++)
@@ -182,7 +180,12 @@ void modifierCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent
 	{
 		carte[posSerpent[tailleSerpent].y][posSerpent[tailleSerpent].x] = ' ';
 	}
-	carte[posSerpent[0].y][posSerpent[0].x] = CORPS;
+	
+	if(tailleSerpent > 1)
+	{
+		carte[posSerpent[1].y][posSerpent[1].x] = CORPS;
+	}
+	carte[posSerpent[0].y][posSerpent[0].x] = TETE;
 	
 	return;
 }
@@ -229,7 +232,7 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y][posTete.x-1] == CORPS && carte[posTete.y][posTete.x-1] != carte[posQueue.y][posQueue.x])
+			else if(carte[posTete.y][posTete.x-1] == CORPS && (posTete.x-1 != posQueue.x && posTete.y != posQueue.y) )
 			{
 				collision = 1;
 			}
@@ -240,7 +243,7 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			break;
 		
 		case DROITE:
-			if(posTete.y == WIDTH-1)
+			if(posTete.x == WIDTH-1)
 			{
 				collision = 1;
 			}

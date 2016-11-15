@@ -9,8 +9,7 @@
  * 
  * AVANCEMENT
  * 
- * Pour l'instant je veux une tête qui se déplace librement dans la carte selon la touche tapée
- * Avancer dans le main
+ * Depuis que j'ai changé la tête, problèmes de collision : rectifier ça
  */
 
 #include <stdio.h>

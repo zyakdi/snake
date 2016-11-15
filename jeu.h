@@ -11,7 +11,7 @@ typedef struct
 
 void jouerPartie();
 void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent);
-void afficherCarte(char carte[][WIDTH]);
+void afficherCarte(char carte[][WIDTH], int score);
 void modifierDirection(char key, int *direction);
 void modifierPosition(position posSerpent[], int tailleSerpent, int direction);
 void modifierCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent, int collision);
