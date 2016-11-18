@@ -1,10 +1,37 @@
+GitHub : 
+Permet de travailler de manière pratique à plusieurs sur un projet, en mettant à disposition sur internet un cloud de fichiers accessible à plusieurs personnes. Utile pour avoir son propre cloud aussi.
+
+
 Commandes github :
 
-Copier répertoire git dans un répertoire sur son ordinateur : 
-git clone https://liendugit nomDuRépertoire
+Copier répertoire git internet dans un répertoire git (qui sera créé) sur son ordinateur : 
+git clone https://liendugit nomDuRépertoireQuiSeraCréé
 
 Voir quels fichiers sont compris dans le git :
 git ls-files
 
 Voir le statut des fichiers git :
 git status
+
+Voir l'historique des commit : 
+git log
+
+Définir son identité :
+git config --global user.email "mon@email.com"
+git config --global user.name "monblaze"
+Enlever le --global si je veux définir mon identité sur ce répertoire seulement
+
+Ajouter des fichiers dans l'index (pas sur internet) :
+git add nomdufichier1 nomdufichier2 etc
+Puis faire un commit de tous les fichiers de l'index :
+git commit -m "Commentaire"
+Puis ajouter ces fichiers sur le cloud GitHub :
+git push origin master
+
+-> Toujours utiliser ces 3 commandes pour envoyer sur le git internet CHAQUE fichier
+du projet 1 par 1
+
+Récupérer les fichiers de son repository GitHub sur son repository local :
+git pull origin master
+
+
