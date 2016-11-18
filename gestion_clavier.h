@@ -8,7 +8,7 @@
 #define GESTION_CLAVIER_H
 
 /*Macro utilisée par la fonction "pressing_key()" */
-#define DELAY_KEY_DETECTION 500000
+#define DELAY_KEY_DETECTION 100000
 #define HIT_KEY 1
 #define NO_KEY -1
 

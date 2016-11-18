@@ -11,14 +11,23 @@ void jouerPartie()
 {
 	char carte[HEIGHT][WIDTH], key = 0;
 	position posSerpent[HEIGHT*WIDTH + 1]; // Taille maximum du serpent en comptant la position "invisible" après sa queue
-	int tailleSerpent = 1, direction = HAUT, collision = 0, score  = 0;
+	int tailleSerpent = 5, direction = HAUT, collision = 0, score  = 0;
 	
 	// Initialisations
 	
 	posSerpent[0].x = WIDTH/2;
 	posSerpent[0].y = HEIGHT/2;
+	posSerpent[1].x = WIDTH/2;
+	posSerpent[1].y = HEIGHT/2 +1;
+	posSerpent[2].x = WIDTH/2;
+	posSerpent[2].y = HEIGHT/2 +2;
+	posSerpent[3].x = WIDTH/2;
+	posSerpent[3].y = HEIGHT/2 +3;
+	posSerpent[4].x = WIDTH/2;
+	posSerpent[4].y = HEIGHT/2 +4;
 	
 	initialiserCarte(carte, posSerpent, tailleSerpent);
+	srand(time(NULL));
 	genererFruit(carte);
 	genererFruit(carte);
 	
@@ -71,6 +80,10 @@ void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerp
 	}
 	
 	carte[posSerpent[0].y][posSerpent[0].x] = TETE;
+	for(i = 1; i < tailleSerpent; i++)
+	{
+		carte[posSerpent[i].y][posSerpent[i].x] = CORPS;
+	}
 	
 	return;
 }
@@ -202,7 +215,7 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y-1][posTete.x] == CORPS && carte[posTete.y-1][posTete.x] != carte[posQueue.y][posQueue.x]) // On vérifie les 2 conditions séparément pour être sûr de ne pas provoquer de segfault
+			else if(carte[posTete.y-1][posTete.x] == CORPS && (posTete.x != posQueue.x || posTete.y-1 != posQueue.y) ) // On vérifie les 2 conditions séparément pour être sûr de ne pas provoquer de segfault
 			{
 				collision = 1;
 			}
@@ -217,7 +230,7 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y+1][posTete.x] == CORPS && carte[posTete.y+1][posTete.x] != carte[posQueue.y][posQueue.x])
+			else if(carte[posTete.y+1][posTete.x] == CORPS && (posTete.x != posQueue.x || posTete.y+1 != posQueue.y) )
 			{
 				collision = 1;
 			}
@@ -232,7 +245,7 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y][posTete.x-1] == CORPS && (posTete.x-1 != posQueue.x && posTete.y != posQueue.y) )
+			else if(carte[posTete.y][posTete.x-1] == CORPS && (posTete.x-1 != posQueue.x || posTete.y != posQueue.y) )
 			{
 				collision = 1;
 			}
@@ -247,7 +260,7 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y][posTete.x+1] == CORPS && carte[posTete.y][posTete.x+1] != carte[posQueue.y][posQueue.x])
+			else if(carte[posTete.y][posTete.x+1] == CORPS && (posTete.x+1 != posQueue.x || posTete.y != posQueue.y) )
 			{
 				collision = 1;
 			}

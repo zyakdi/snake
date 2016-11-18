@@ -1,8 +1,8 @@
 #ifndef CONSTANTES
 #define CONSTANTES
 
-#define HEIGHT 8
-#define WIDTH 10
+#define HEIGHT 15
+#define WIDTH 30
 
 #define CORPS '0'
 #define TETE '@'

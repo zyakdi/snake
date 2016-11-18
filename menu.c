@@ -1,34 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "menu.h"
 #include "constantes.h"
 
 void afficherMenu()
 {
-	printf("\nMENU\n\n");
+	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMENU\n\n");
 	printf("1: Lancer une partie\n2: Afficher les 5 meilleurs scores\n3: Quitter le jeu\n\n");
 	return;
 }
 
-int demanderMenu()
+char demanderMenu()
 {
-	int menu = 0;
+	char menu[2] = ""; // On utilise une case pour le caractère et une autre pour \0
 	
 	do
 	{
 		printf("Que voulez-vous faire ?\nReponse : ");
-		// Faire la fonction de saisie sécurisée
-		scanf(" %d", &menu);
-	} while(menu < 1 && menu > 3);
+		lireChaine(menu);
+	} while(menu[0] < '1' || menu[0] > '3');
 	
-	return menu;
+	return menu[0];
 }
 
 void lireChaine(char *chaine) // Lit un caractère
 {
     char *posEntree = NULL;
 
-    fgets(chaine, 1, stdin);
+    fgets(chaine, 2, stdin);
 
     if(strchr(chaine, '\n') != NULL) // Si on trouve le caractère \n
     {

@@ -2,7 +2,7 @@
 #define MENU
 
 void afficherMenu();
-int demanderMenu();
+char demanderMenu();
 void lireChaine(char *chaine);
 void viderBuffer();
 

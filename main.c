@@ -23,11 +23,28 @@
 
 int main(void)
 {
-	// JEU
+	char menu = 0;
 	
-	srand(time(NULL));
-	jouerPartie();
-	
+	do
+	{
+		afficherMenu();
+		menu = demanderMenu();
+		
+		switch(menu)
+		{
+			case '1':
+				jouerPartie(); // Amuse-toi
+				break;
+			
+			case '2':
+				printf("Pas encore disponible, desole vieux\n");
+				break;
+				
+			case '3':
+				printf("A bientot vieux\n");
+				break;
+		}
+	} while(menu != '3');
 	
 	return 0;
 }
