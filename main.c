@@ -9,7 +9,7 @@
  * 
  * AVANCEMENT
  * 
- * Depuis que j'ai changé la tête, problèmes de collision : rectifier ça
+ * La progression de la vitesse est fonctionnelle, maintenant je veux rajouter des fonctionnalités fun comme des fruits différents donnant des effets spéciaux
  */
 
 #include <stdio.h>
@@ -27,6 +27,7 @@ int main(void)
 	
 	do
 	{
+		system("clear");
 		afficherMenu();
 		menu = demanderMenu();
 		
@@ -41,10 +42,13 @@ int main(void)
 				break;
 				
 			case '3':
-				printf("A bientot vieux\n");
+				printf("Parametres\n");
 				break;
+				
+			case '4':
+				printf("A bientot vieux\n");
 		}
-	} while(menu != '3');
+	} while(menu != '4');
 	
 	return 0;
 }

@@ -11,22 +11,13 @@ void jouerPartie()
 {
 	char carte[HEIGHT][WIDTH], key = 0;
 	position posSerpent[HEIGHT*WIDTH + 1]; // Taille maximum du serpent en comptant la position "invisible" après sa queue
-	int tailleSerpent = 5, direction = HAUT, collision = 0, score  = 0;
+	int tailleSerpent = HEIGHT/3, direction = HAUT, collision = 0, score  = 0, delai = DELAY_KEY_DETECTION, changeVitesse = 10000;
 	
 	// Initialisations
 	
-	posSerpent[0].x = WIDTH/2;
-	posSerpent[0].y = HEIGHT/2;
-	posSerpent[1].x = WIDTH/2;
-	posSerpent[1].y = HEIGHT/2 +1;
-	posSerpent[2].x = WIDTH/2;
-	posSerpent[2].y = HEIGHT/2 +2;
-	posSerpent[3].x = WIDTH/2;
-	posSerpent[3].y = HEIGHT/2 +3;
-	posSerpent[4].x = WIDTH/2;
-	posSerpent[4].y = HEIGHT/2 +4;
-	
+	initialiserPositions(posSerpent, tailleSerpent);
 	initialiserCarte(carte, posSerpent, tailleSerpent);
+	
 	srand(time(NULL));
 	genererFruit(carte);
 	genererFruit(carte);
@@ -35,10 +26,10 @@ void jouerPartie()
 	
 	do
 	{
-		printf("\n\n\n\n\n\n");
+		system("clear");
 		afficherCarte(carte, score);
 		
-		key = pressing_key();
+		key = pressing_key(delai);
 		if(key != NO_KEY)
 		{
 			modifierDirection(key, &direction);
@@ -56,6 +47,7 @@ void jouerPartie()
 				tailleSerpent++;
 				score++;
 				genererFruit(carte);
+				delai -= changeVitesse; // A chaque fruit mangé, la vitesse du serpent augmente
 			}
 			modifierPosition(posSerpent, tailleSerpent, direction);
 			modifierCarte(carte, posSerpent, tailleSerpent, collision);
@@ -66,7 +58,27 @@ void jouerPartie()
 	return;
 }
 
-// Crée une carte vierge avec le serpent au centre, tailleSerpent en paramètres au cas où j'ai besoin d'un serpent de taille > 1 au début
+void initialiserPositions(position posSerpent[], int tailleSerpent)
+{
+	int i = 0;
+	
+	// TETE
+	
+	posSerpent[0].x = WIDTH/2;
+	posSerpent[0].y = HEIGHT/2;
+	
+	// CORPS
+	
+	for(i = 1; i < tailleSerpent; i++)
+	{
+		posSerpent[i].x = posSerpent[0].x; // Ca change pas
+		posSerpent[i].y = posSerpent[i-1].y + 1; // On étale le serpent à la verticale
+	}
+	
+	return;
+}
+
+// Crée une carte vierge avec le serpent au centre
 void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent)
 {
 	int i = 0, j = 0;
@@ -80,6 +92,8 @@ void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerp
 	}
 	
 	carte[posSerpent[0].y][posSerpent[0].x] = TETE;
+	
+	// La taille du serpent initiale vaut un tiers de la hauteur de la map
 	for(i = 1; i < tailleSerpent; i++)
 	{
 		carte[posSerpent[i].y][posSerpent[i].x] = CORPS;
@@ -130,22 +144,22 @@ void modifierDirection(char key, int *direction)
 {
 		switch(key)
 		{
-			case 'e':
+			case 'z':
 			if(*direction != BAS)
 				*direction = HAUT;
 			break;
 			
-			case 'd':
+			case 's':
 			if(*direction != HAUT)
 				*direction = BAS;
 			break;
 			
-			case 's':
+			case 'q':
 			if(*direction != DROITE)
 				*direction = GAUCHE;
 			break;
 			
-			case 'f':
+			case 'd':
 			if(*direction != GAUCHE)
 				*direction = DROITE;
 			break;

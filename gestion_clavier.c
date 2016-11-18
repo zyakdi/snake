@@ -89,12 +89,12 @@ char readch()
 }
 
 
-char pressing_key()
+char pressing_key(int delai)
 {
 	char key = NO_KEY;
 	
 	init_keyboard();
-	usleep(DELAY_KEY_DETECTION);
+	usleep(delai);
 	
 	if( keyboard_hit() != NO_KEY )
 	{

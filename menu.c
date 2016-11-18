@@ -6,8 +6,8 @@
 
 void afficherMenu()
 {
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMENU\n\n");
-	printf("1: Lancer une partie\n2: Afficher les 5 meilleurs scores\n3: Quitter le jeu\n\n");
+	printf("\nMENU\n\n");
+	printf("1: Lancer une partie\n2: Afficher les 5 meilleurs scores\n3: Parametres\n4: Quitter le jeu\n\n");
 	return;
 }
 
@@ -19,7 +19,7 @@ char demanderMenu()
 	{
 		printf("Que voulez-vous faire ?\nReponse : ");
 		lireChaine(menu);
-	} while(menu[0] < '1' || menu[0] > '3');
+	} while(menu[0] < '1' || menu[0] > '4');
 	
 	return menu[0];
 }

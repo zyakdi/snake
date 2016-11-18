@@ -8,7 +8,7 @@
 #define GESTION_CLAVIER_H
 
 /*Macro utilisée par la fonction "pressing_key()" */
-#define DELAY_KEY_DETECTION 100000
+#define DELAY_KEY_DETECTION 300000
 #define HIT_KEY 1
 #define NO_KEY -1
 
@@ -21,6 +21,6 @@ char   readch(void);
 /*Fonction qui renvoie une touche pressée par l'utilisateur
  * Renvoie la valeur NO_KEY si aucune touche n'a été appuyée
  * pendant le temps DELAY_KEY_DETECTION (en secondes)*/
-char pressing_key(void);
+char pressing_key(int delai);
 
 #endif 

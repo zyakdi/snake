@@ -10,6 +10,7 @@ typedef struct
 }position;
 
 void jouerPartie();
+void initialiserPositions(position posSerpent[], int tailleSerpent);
 void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent);
 void afficherCarte(char carte[][WIDTH], int score);
 void modifierDirection(char key, int *direction);
