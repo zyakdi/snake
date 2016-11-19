@@ -7,11 +7,12 @@
 
 //////////////// Fonctions qui traitent le jeu d'une partie ////////////////
 
+
 void jouerPartie()
 {
-	char carte[HEIGHT][WIDTH], key = 0;
-	position posSerpent[HEIGHT*WIDTH + 1]; // Taille maximum du serpent en comptant la position "invisible" après sa queue
-	int tailleSerpent = HEIGHT/3, direction = HAUT, collision = 0, score  = 0, delai = DELAY_KEY_DETECTION, changeVitesse = 10000;
+	char carte[HEIGHT][WIDTH], key = 0, fruitMange = 0;
+	position posSerpent[HEIGHT*WIDTH + 1], posFruit; // posSerpent : aille maximum du serpent en comptant la position "invisible" après sa queue
+	int tailleSerpent = HEIGHT/3, direction = HAUT, collision = 0, score  = 0, delai = DELAY_KEY_DETECTION;
 	
 	// Initialisations
 	
@@ -19,24 +20,28 @@ void jouerPartie()
 	initialiserCarte(carte, posSerpent, tailleSerpent);
 	
 	srand(time(NULL));
-	genererFruit(carte);
-	genererFruit(carte);
+	genererFruit(carte, 0);
+	genererFruit(carte, 0);
 	
 	// Deroulement du jeu
 	
 	do
 	{
 		system("clear");
-		afficherCarte(carte, score);
+		afficherCarte(carte, score, fruitMange);
 		
+		////// JEU //////
+		
+		// Détection de la direction
 		key = pressing_key(delai);
 		if(key != NO_KEY)
 		{
 			modifierDirection(key, &direction);
 		}
 		
-		collision = verifierCollision(carte, posSerpent[0], posSerpent[tailleSerpent-1], direction);
-		if(collision == 1)
+		// Vérification de la collision
+		collision = verifierCollision(carte, posSerpent[0], posSerpent[tailleSerpent-1], direction, &posFruit);
+		if(collision == 1) // Si le serpent heurte un mur ou son corps
 		{
 			printf("\n\nPerdu ! T'es mauvais\n");
 		}
@@ -44,10 +49,15 @@ void jouerPartie()
 		{
 			if(collision == -1) // Si il mange un fruit
 			{
-				tailleSerpent++;
-				score++;
-				genererFruit(carte);
-				delai -= changeVitesse; // A chaque fruit mangé, la vitesse du serpent augmente
+				mangerFruit(carte[posFruit.y][posFruit.x], carte, &score, &tailleSerpent, posSerpent, &delai); // Active les effets provoqués par le fruit mangé
+				delai -= CHANGE_VITESSE; // A chaque fruit mangé, la vitesse du serpent augmente
+				fruitMange = carte[posFruit.y][posFruit.x]; // Permet de déterminer le message à afficher
+				
+				
+				if(carte[posFruit.y][posFruit.x] == POMME)
+				{
+					collision = 2; // Indique que le serpent mange une pomme, utile pour modifierCarte()
+				}
 			}
 			modifierPosition(posSerpent, tailleSerpent, direction);
 			modifierCarte(carte, posSerpent, tailleSerpent, collision);
@@ -57,6 +67,7 @@ void jouerPartie()
 	
 	return;
 }
+
 
 void initialiserPositions(position posSerpent[], int tailleSerpent)
 {
@@ -77,6 +88,7 @@ void initialiserPositions(position posSerpent[], int tailleSerpent)
 	
 	return;
 }
+
 
 // Crée une carte vierge avec le serpent au centre
 void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent)
@@ -102,7 +114,8 @@ void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerp
 	return;
 }
 
-void afficherCarte(char carte[][WIDTH], int score)
+
+void afficherCarte(char carte[][WIDTH], int score, char fruitMange)
 {
 	int i = 0, j = 0;
 	
@@ -114,22 +127,36 @@ void afficherCarte(char carte[][WIDTH], int score)
 	{
 		printf("X");
 	}
-	printf("\n");
 	
-	// Affichage de la carte
-	for(i = 0; i < HEIGHT; i++)
+	// Affichage de la 1ere moitié de la carte
+	for(i = 0; i < HEIGHT/2; i++)
 	{
-		printf("X"); // Paroi latérale gauche
+		printf("\nX"); // Paroi latérale gauche
 		
 		for(j = 0; j < WIDTH; j++)
 		{
 			printf("%c", carte[i][j]);
 		}
 		printf("X"); // Paroi latérale droite
-		printf("\n"); // Retour ligne
+	}
+	
+	// Petit message sur le tec hamdoullah
+	lireMessage(fruitMange);
+	
+	// Affichage de la 2eme moitié de la carte
+	for(i = i; i < HEIGHT; i++)
+	{
+		printf("\nX"); // Paroi latérale gauche
+		
+		for(j = 0; j < WIDTH; j++)
+		{
+			printf("%c", carte[i][j]);
+		}
+		printf("X"); // Paroi latérale droite
 	}
 	
 	// Paroi inférieure
+	printf("\n");
 	for(j = 0; j < WIDTH+2; j++)
 	{
 		printf("X");
@@ -138,6 +165,7 @@ void afficherCarte(char carte[][WIDTH], int score)
 	
 	return;
 }
+
 
 // Modifie la direction si l'utilisateur en a décidé ainsi
 void modifierDirection(char key, int *direction)
@@ -166,6 +194,7 @@ void modifierDirection(char key, int *direction)
 		}
 	return;
 }
+
 
 void modifierPosition(position posSerpent[], int tailleSerpent, int direction)
 {
@@ -200,25 +229,27 @@ void modifierPosition(position posSerpent[], int tailleSerpent, int direction)
 	return;
 }
 
+
 // Ajoute la tête du serpent et supprime la queue, à chaque avancée
 void modifierCarte(char carte[][WIDTH], position posSerpent[], int tailleSerpent, int collision)
 {
-	if(collision != -1)
+	if(collision != 2) // Si le serpent ne mange pas une pomme
 	{
-		carte[posSerpent[tailleSerpent].y][posSerpent[tailleSerpent].x] = ' ';
+		carte[posSerpent[tailleSerpent].y][posSerpent[tailleSerpent].x] = ' '; // Supprime la queue
 	}
 	
 	if(tailleSerpent > 1)
 	{
 		carte[posSerpent[1].y][posSerpent[1].x] = CORPS;
 	}
-	carte[posSerpent[0].y][posSerpent[0].x] = TETE;
+	carte[posSerpent[0].y][posSerpent[0].x] = TETE; // Ajoute la tête
 	
 	return;
 }
 
+
 // Renvoie 1 si le serpent se heurte contre le mur ou contre son corps, -1 si il mange un fruit, 0 si il avance
-int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, int direction)
+int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, int direction, position *posFruit)
 {
 	int collision = 0;
 	
@@ -233,8 +264,12 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y-1][posTete.x] == FRUIT) // Si le serpent mange un fruit
+			else if(carte[posTete.y-1][posTete.x] == POMME || carte[posTete.y-1][posTete.x] == POIRE || carte[posTete.y-1][posTete.x] == MULTIFRUIT || 
+					carte[posTete.y-1][posTete.x] == CACTUS || carte[posTete.y-1][posTete.x] == BIGMAC) // Si le serpent mange un fruit
 			{
+				// Détection de la position du fruit pour le manipuler dans jouerPartie()
+				posFruit->x = posTete.x;
+				posFruit->y = posTete.y-1;
 				collision = -1;
 			}
 			break;
@@ -248,8 +283,11 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y+1][posTete.x] == FRUIT)
+			else if(carte[posTete.y+1][posTete.x] == POMME || carte[posTete.y+1][posTete.x] == POIRE || carte[posTete.y+1][posTete.x] == MULTIFRUIT || 
+					carte[posTete.y+1][posTete.x] == CACTUS || carte[posTete.y+1][posTete.x] == BIGMAC)
 			{
+				posFruit->x = posTete.x;
+				posFruit->y = posTete.y+1;
 				collision = -1;
 			}
 			break;
@@ -263,8 +301,11 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y][posTete.x-1] == FRUIT)
+			else if(carte[posTete.y][posTete.x-1] == POMME || carte[posTete.y][posTete.x-1] == POIRE || carte[posTete.y][posTete.x-1] == MULTIFRUIT ||
+					carte[posTete.y][posTete.x-1] == CACTUS || carte[posTete.y][posTete.x-1] == BIGMAC)
 			{
+				posFruit->x = posTete.x-1;
+				posFruit->y = posTete.y;
 				collision = -1;
 			}
 			break;
@@ -278,8 +319,11 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 			{
 				collision = 1;
 			}
-			else if(carte[posTete.y][posTete.x+1] == FRUIT)
+			else if(carte[posTete.y][posTete.x+1] == POMME || carte[posTete.y][posTete.x+1] == POIRE || carte[posTete.y][posTete.x+1] == MULTIFRUIT ||
+					carte[posTete.y][posTete.x+1] == CACTUS || carte[posTete.y][posTete.x+1] == BIGMAC)
 			{
+				posFruit->x = posTete.x+1;
+				posFruit->y = posTete.y;
 				collision = -1;
 			}
 			break;
@@ -288,18 +332,127 @@ int verifierCollision(char carte[][WIDTH], position posTete, position posQueue, 
 	return collision;
 }
 
+
 // Génère un fruit sur une case vide de la carte
-void genererFruit(char carte[][WIDTH])
+void genererFruit(char carte[][WIDTH], char poire)
 {
 	position posFruit;
+	char fruit = POMME;
 	
+	// Génération d'une position où le fruit sera placé
 	do
 	{
 		posFruit.x = rand()%WIDTH;
 		posFruit.y = rand()%HEIGHT;
 	}while(carte[posFruit.y][posFruit.x] != ' ');
 	
-	carte[posFruit.y][posFruit.x] = FRUIT;
+	// Determination du fruit à générer
+	if(poire == POIRE) // Si l'on veut absolument générer une poire (lorsque le serpent mange un multifruit)
+	{
+		fruit = POIRE;
+	}
+	else
+	{
+		if(fruitSpecial(PROBA_BIGMAC))
+		{
+			fruit = BIGMAC;
+		}
+		else if(fruitSpecial(PROBA_CACTUS))
+		{
+			fruit = CACTUS;
+		}
+		else if(fruitSpecial(PROBA_MULTIFRUIT))
+		{
+			fruit = MULTIFRUIT;
+		}
+	}
+	
+	carte[posFruit.y][posFruit.x] = fruit;
+	
+	return;
+}
+
+// Probabilité de 1/probaMax de générer le fruit concerné 
+int fruitSpecial(int probaMax)
+{
+	if(rand()%probaMax == 0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+
+// Mise en place des effets produits par le fruit
+void mangerFruit(char fruit, char carte[][WIDTH], int *score, int *tailleSerpent, position posSerpent[], int *delai)
+{
+	int i = 0, nouvelleTailleSerpent = 0;
+	
+	switch(fruit)
+	{
+		case POMME:
+			(*score)++;
+			(*tailleSerpent)++;
+			genererFruit(carte, 0);
+			break;
+			
+		case POIRE:
+			(*score)++;
+			break;
+			
+		case MULTIFRUIT:
+			for(i = rand()%7; i < 10; i++) // 4 à 10 itérations
+			{
+				genererFruit(carte, POIRE);
+			}
+			genererFruit(carte, 0);
+			break;
+			
+		case CACTUS:
+			if(*tailleSerpent >= 3) // Il lui faut une taille minimum de 3
+			{
+				nouvelleTailleSerpent = 2 * (*tailleSerpent/3);
+				for(i = nouvelleTailleSerpent; i < *tailleSerpent; i++)
+				{
+					carte[posSerpent[i].y][posSerpent[i].x] = ' ';
+				}
+				*tailleSerpent = nouvelleTailleSerpent;
+			}
+			genererFruit(carte, 0);
+			break;
+			
+		case BIGMAC:
+			*delai += RALENTIR;
+			genererFruit(carte, 0);
+			break;
+	}
+	
+	return;
+}
+
+
+void lireMessage(char fruitMange)
+{
+	switch(fruitMange)
+	{
+		case POIRE:
+			printf(MESSAGE_POIRE);
+			break;
+		
+		case MULTIFRUIT:
+			printf(MESSAGE_MULTIFRUIT);
+			break;
+			
+		case CACTUS:
+			printf(MESSAGE_CACTUS);
+			break;
+		case BIGMAC:
+			printf(MESSAGE_BIGMAC);
+			break;
+	}
 	
 	return;
 }

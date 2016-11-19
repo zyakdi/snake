@@ -9,7 +9,9 @@
  * 
  * AVANCEMENT
  * 
- * La progression de la vitesse est fonctionnelle, maintenant je veux rajouter des fonctionnalités fun comme des fruits différents donnant des effets spéciaux
+ * Ajout de plein de fruits : pomme, poire, cactus, multifruit, big mac
+ * Ajout de messages relatifs à chaque fruit
+ * A faire : pouvoir ultra spécial après avoir récolté les lettres ZAK, ajout des couleurs
  */
 
 #include <stdio.h>
