@@ -16,9 +16,9 @@
 #define CACTUS '#' // Coupe un tiers du serpent
 #define BIGMAC '=' // Ralentit le serpent
 
-#define PROBA_MULTIFRUIT 10 // 1/PROBA
-#define PROBA_CACTUS 10
-#define PROBA_BIGMAC 10
+#define PROBA_MULTIFRUIT 20 // 1/PROBA
+#define PROBA_CACTUS 30
+#define PROBA_BIGMAC 20
 
 #define MESSAGE_POIRE "  Une poire! Miam"
 #define MESSAGE_MULTIFRUIT "  Cocktail multifruit! Bismillah"

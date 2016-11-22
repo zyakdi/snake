@@ -29,7 +29,11 @@ int main(void)
 	
 	do
 	{
-		system("clear");
+		if(menu != '1') // Pour pouvoir afficher le score à la fin d'une partie
+		{
+			system("clear");
+		}
+		
 		afficherMenu();
 		menu = demanderMenu();
 		

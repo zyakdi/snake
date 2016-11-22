@@ -28,7 +28,7 @@ void jouerPartie()
 	do
 	{
 		system("clear");
-		afficherCarte(carte, score, fruitMange);
+		afficherCarte(carte, score, fruitMange, delai);
 		
 		////// JEU //////
 		
@@ -43,7 +43,7 @@ void jouerPartie()
 		collision = verifierCollision(carte, posSerpent[0], posSerpent[tailleSerpent-1], direction, &posFruit);
 		if(collision == 1) // Si le serpent heurte un mur ou son corps
 		{
-			printf("\n\nPerdu ! T'es mauvais\n");
+			printf("\n\nPerdu ! T'es mauvais\nScore : %d\n", score);
 		}
 		else
 		{
@@ -115,7 +115,7 @@ void initialiserCarte(char carte[][WIDTH], position posSerpent[], int tailleSerp
 }
 
 
-void afficherCarte(char carte[][WIDTH], int score, char fruitMange)
+void afficherCarte(char carte[][WIDTH], int score, char fruitMange, int vitesseActuelle)
 {
 	int i = 0, j = 0;
 	
@@ -141,7 +141,8 @@ void afficherCarte(char carte[][WIDTH], int score, char fruitMange)
 	}
 	
 	// Petit message sur le tec hamdoullah
-	lireMessage(fruitMange);
+	//lireMessage(fruitMange);
+	printf("  Vitesse : %d", vitesseActuelle);
 	
 	// Affichage de la 2eme moitié de la carte
 	for(i = i; i < HEIGHT; i++)
