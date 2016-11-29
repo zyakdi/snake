@@ -141,8 +141,7 @@ void afficherCarte(char carte[][WIDTH], int score, char fruitMange, int vitesseA
 	}
 	
 	// Petit message sur le tec hamdoullah
-	//lireMessage(fruitMange);
-	printf("  Vitesse : %d", vitesseActuelle);
+	lireMessage(fruitMange);
 	
 	// Affichage de la 2eme moitié de la carte
 	for(i = i; i < HEIGHT; i++)
