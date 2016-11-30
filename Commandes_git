@@ -21,17 +21,35 @@ git config --global user.email "mon@email.com"
 git config --global user.name "monblaze"
 Enlever le --global si je veux définir mon identité sur ce répertoire seulement
 
-Ajouter des fichiers dans l'index (pas sur internet) :
-git add nomdufichier1 nomdufichier2 etc
+Ajouter tous les fichiers modifiés dans l'index (pas sur internet) :
+git add nomdufichier1 nomdufichier2 (etc)
 Puis faire un commit de tous les fichiers de l'index :
 git commit -m "Commentaire"
 Puis ajouter ces fichiers sur le cloud GitHub :
 git push origin master
 
--> Toujours utiliser ces 3 commandes pour envoyer sur le git internet CHAQUE fichier
-du projet 1 par 1
+-> Toujours utiliser ces 3 commandes pour envoyer les fichiers modifiés sur GitHub
 
 Récupérer les fichiers de son repository GitHub sur son repository local :
 git pull origin master
+
+___________
+
+Travailler en collaboration
+
+Voir les branches existantes :
+git branch
+
+Créer une nouvelle branche :
+git branch nomDeLaBranche
+
+Aller dans une branche :
+git checkout nomDeLaBranche
+
+ASTUCE : créer une nouvelle branche + aller dans cette branche :
+git checkout -b nomDeLaBranche
+
+Ajouter les modifications de la branche B dans la branche A : il faut d'abord se positionner dans la branche A, puis :
+git merge brancheB
 
 
